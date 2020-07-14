@@ -9,9 +9,11 @@ parser = argparse.ArgumentParser(
                         associated with a donor-advised fund')
 parser.add_argument('-form',type=str,
                     help='link or file name to XML format 990 form')
-parser.add_argument('-download', type=bool, default=True,
+parser.add_argument('-download', default = True,
                     help="whether to download the form from online (True, default) \
                         or access it locally")
+parser.add_argument('--verbose', action="store_true",
+                    help="whether to print progress")
 args = parser.parse_args()
 
 
@@ -123,7 +125,8 @@ if __name__ == "__main__":
     tree = read_form(document=args.form, download=args.download)
     #confirm DAF
     if confirm_daf_fund(tree):
-        print("DAF Confirmed. Getting data...")
+        if args.verbose:
+            print("DAF Confirmed. Getting data...")
         #get org headers
         sponsor = get_form_headers(tree)
         #get schedule D
@@ -137,7 +140,9 @@ if __name__ == "__main__":
         #save dataframes with org info and grantees (I)
         grantees.to_csv(sponsor['NAME'] + "_Grantees")
         sponsor_details.to_csv(sponsor['NAME'] + "_Details")
-        print("Documents saved!")
+        if args.verbose:
+            print("Documents saved!")
     else:
-        print("No DAF found.")
+        if args.verbose:
+            print("No DAF found.")
 
