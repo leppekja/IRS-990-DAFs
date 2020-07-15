@@ -13,7 +13,7 @@ def get_data(index_csv, verbose=False, start=0, end=150):
     '''
     index = pd.read_csv(index_csv)
     # collect only 990s
-    index = index.loc[index['RETURN_TYPE'] == 990].OBJECT_ID.tolist()
+    index = index.loc[index['RETURN_TYPE'] == '990'].OBJECT_ID.tolist()
     sponsors = pd.DataFrame()
     grants_made = pd.DataFrame()
 
@@ -51,6 +51,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
             description='Read an AWS IRS 990 Index and download data \
                         associated with a donor-advised fund')
+    parser.add_argument('-file',type=str,
+                    help='index file to use')
     parser.add_argument('-start',type=int, default=0,
                     help='object id index to start with')
     parser.add_argument('-end',type=int, default=150,
