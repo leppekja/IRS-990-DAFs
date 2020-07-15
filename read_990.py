@@ -138,8 +138,8 @@ if __name__ == "__main__":
         #clean schedule I
         grantees = clean_daf_grantee_data(grantees, sponsor['NAME']) 
         #save dataframes with org info and grantees (I)
-        grantees.to_csv(sponsor['NAME'] + "_Grantees")
-        sponsor_details.to_csv(sponsor['NAME'] + "_Details")
+        grantees.to_csv(sponsor['NAME'] + "_Grantees.csv")
+        sponsor_details.to_csv(sponsor['NAME'] + "_Details.csv")
         if args.verbose:
             print("Documents saved!")
     else:
