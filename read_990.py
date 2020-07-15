@@ -4,19 +4,6 @@ import read_xmls
 import pandas as pd  
 import argparse
 
-parser = argparse.ArgumentParser(
-            description='Read a IRS 990 Form and download data \
-                        associated with a donor-advised fund')
-parser.add_argument('-form',type=str,
-                    help='link or file name to XML format 990 form')
-parser.add_argument('-download', default = True,
-                    help="whether to download the form from online (True, default) \
-                        or access it locally")
-parser.add_argument('--verbose', action="store_true",
-                    help="whether to print progress")
-args = parser.parse_args()
-
-
 def read_form(document=None, download=True):
     '''
     Reads in IRS 990 form from download or link, if download True.
@@ -121,6 +108,18 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor):
     return daf_dataframe
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+            description='Read a IRS 990 Form and download data \
+                        associated with a donor-advised fund')
+    parser.add_argument('-form',type=str,
+                    help='link or file name to XML format 990 form')
+    parser.add_argument('--download', action="store_true",
+                    help="whether to download the form from online (True, default) \
+                        or access it locally")
+    parser.add_argument('--verbose', action="store_true",
+                    help="whether to print progress")
+    args = parser.parse_args()
+
     #read in document
     tree = read_form(document=args.form, download=args.download)
     #confirm DAF
