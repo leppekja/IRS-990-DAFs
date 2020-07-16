@@ -49,7 +49,6 @@ def xml_to_dict(tree):
     '''
     items = {}
     count = 0
-    parent_labels = ''
     for line in tree.iter():
         if label in items.keys():
             label = label + str(count) + ":"

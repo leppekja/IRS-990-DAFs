@@ -29,10 +29,13 @@ def confirm_daf_fund(tree):
     Input: tree
     Output: Boolean
     '''
+    #should recode this better to check for form type!
+    # e.g. 990PFs
     if tree.find('ReturnData').find('IRS990').find('DonorAdvisedFundInd').text == str(1):
         return True
     else:
         return False
+
 
 def get_form_headers(tree):
     '''
