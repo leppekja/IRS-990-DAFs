@@ -5,7 +5,7 @@ import argparse
 import os
 
 
-def get_data(file_or_folder, verbose=False, start=0, end=500000):
+def get_data(file_or_folder, start, end, verbose=False):
     '''
     Read AWS index file or folder of forms and aggregate Schedule I
     and sponsoring organization forms.
@@ -47,7 +47,10 @@ def get_data(file_or_folder, verbose=False, start=0, end=500000):
         # initially RETURN_TYPE is stored as text; after converting to DataFrame,
         # it is considered a numpy int64, which may cause a warning if you convert
         # a selection of forms from the csv to a DataFrame and back to a CSV. 
-        index = index.loc[index['RETURN_TYPE'] == '990'].OBJECT_ID.tolist()
+        if type(index['RETURN_TYPE']) != str: 
+            index = index.loc[index['RETURN_TYPE'] == 990].OBJECT_ID.tolist()
+        else:
+            index = index.loc[index['RETURN_TYPE'] == '990'].OBJECT_ID.tolist()
     
         for form in index[start:end]:
             link = "https://s3.amazonaws.com/irs-form-990/{}_public.xml".format(str(form))
@@ -56,6 +59,7 @@ def get_data(file_or_folder, verbose=False, start=0, end=500000):
                 daf_object_ids.append(form)
                 sponsor_details, grantees = get_daf_data(tree, verbose)
                 #append dataframes with org info and grantees (I)
+                print(sponsor_details)
                 sponsors = sponsors.append(sponsor_details)
                 grants_made = grants_made.append(grantees)
             else:
@@ -85,7 +89,7 @@ def get_daf_data(tree, verbose):
         #get schedule D
         daf_details = rd.get_schedule_d(tree)
         #combine headers and schedule D
-        sponsor_details = pd.DataFrame([sponsor, daf_details])
+        sponsor_details = pd.DataFrame({**sponsor, **daf_details}, index=[0])
         #get schedule I
         grantees = rd.get_schedule_i(tree)
         #clean schedule I
@@ -95,6 +99,24 @@ def get_daf_data(tree, verbose):
     else:
         return None
 
+#################
+'''
+Check form versions and types to analyze issues that arise
+'''
+def filing_type(file_or_folder):
+    '''
+    Creates a DataFrame to summarize form type and version
+    '''
+    data = {'Version':[], 'Type':[]}
+    
+    for daf_file in os.listdir(file_or_folder):
+        tree = rd.read_form(document= file_or_folder + '/' + daf_file, download=False)
+        data['Type'].append(rd.get_form_type(tree))
+        data['Version'].append(rd.get_form_version(tree))
+    pd_data = pd.DataFrame(data)
+    pd_data.to_csv('990_Versions_Types.csv')
+
+    return pd_data.describe()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -104,9 +126,14 @@ if __name__ == "__main__":
                     help='file to use, either a folder or a csv')
     parser.add_argument('-start',type=int, default=0,
                     help='object id index to start with')
-    parser.add_argument('-end',type=int, default=150,
+    parser.add_argument('-end',type=int, default=500000,
                     help='object id index to end with')
     parser.add_argument('--verbose', action="store_true",
                     help="whether to print progress")
+    parser.add_argument('--analyze', action="store_true",
+                    help="Check version and form types")        
     args = parser.parse_args()   
-    get_data(args.file, args.verbose, args.start, args.end)
+    if args.analyze:
+        filing_type(args.file)
+    else:
+        get_data(args.file, args.start, args.end, args.verbose)

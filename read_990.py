@@ -23,19 +23,34 @@ def read_form(document=None, download=True):
 
     return root
 
+def get_form_version(tree):
+    '''
+    Checks IRS Form 990 version
+    Input: tree
+    Output: Form number
+    '''
+    return tree.attrib['returnVersion']
+
+def get_form_type(tree):
+    '''
+    Check form type 
+    Input: tree
+    Output: Form type
+    '''
+    return tree.find('ReturnHeader').find('ReturnTypeCd').text
+
 def confirm_daf_fund(tree):
     '''
     Checks IRS Form 990 Part IV line 6 if yes.
     Input: tree
     Output: Boolean
     '''
-    #should recode this better to check for form type!
-    # e.g. 990PFs
+    # Does this change based on form type or version?
+    # if not 990, work?
     if tree.find('ReturnData').find('IRS990').find('DonorAdvisedFundInd').text == str(1):
         return True
     else:
         return False
-
 
 def get_form_headers(tree):
     '''
@@ -46,6 +61,7 @@ def get_form_headers(tree):
     data = {}
     data['EIN'] = read_xmls.search_tree(tree, 'EIN')['EIN']
     data['NAME'] = read_xmls.search_tree(tree, 'BusinessName', True)['BusinessNameLine1Txt']
+    
     for child in tree.find(".//Filer/USAddress"):
         data[child.tag] = child.text
 
