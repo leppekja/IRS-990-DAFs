@@ -4,6 +4,19 @@ import read_xmls
 import pandas as pd  
 import argparse
 
+'''
+FIELDS OBTAINED
+returnVersion
+ReturnHeader / ReturnTypeCd
+ReturnData / IRS990 / DonorAdvisedFundInd
+EIN
+BusinessNameLine1Txt
+All fields in: 
+.//Filer/USAddress
+ReturnData / IRS990ScheduleI
+ReturnData / IRS990ScheduleD
+'''
+
 def read_form(document=None, download=True):
     '''
     Reads in IRS 990 form from download or link, if download True.
@@ -66,6 +79,19 @@ def get_form_headers(tree):
         data[child.tag] = child.text
 
     return data
+
+def get_summary_data(tree):
+    '''
+    Collects the summary data from Part I of the 
+    written form, as it may differ from other parts.
+    Obtains (ACTIVITIES AND GOVERNENCE)number of 
+    individuals employed, number of volunteers; 
+    (REVENUE) total contributions and grants, program
+    service revenue, investment income, other revenue,
+     and total revenue; (EXPENSES) grants and similar
+     amounts paid, salaries, other compensation.
+    '''
+    return None
 
 def get_schedule_i(root):
     '''
