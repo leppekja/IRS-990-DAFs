@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as et
 import requests
 import read_xmls  
-import pandas as pd  
+import pandas as pd
+import numpy as np  
 import argparse
 
 '''
@@ -74,7 +75,7 @@ def get_form_headers(tree):
     data = {}
     data['EIN'] = read_xmls.search_tree(tree, 'EIN')['EIN']
     data['NAME'] = read_xmls.search_tree(tree, 'BusinessName', True)['BusinessNameLine1Txt']
-    
+
     for child in tree.find(".//Filer/USAddress"):
         data[child.tag] = child.text
 
@@ -106,13 +107,16 @@ def get_schedule_i(root):
         grantees = []
         for child in root.find('ReturnData').find('IRS990ScheduleI'):
             org = {}
-            for item in child:
+            if (child.tag == 'RecipientTable') or (child.tag == 'GrantsOtherAsstToIndivInUSGrp'):
+                for item in child:
                 #Get only grantee information, not Supplemental Information
-                if item == 'RecipientTable':
-                    for subitem in item:
-                        org[subitem.tag] = subitem.text
-                else:
-                    org[item.tag] = item.text
+                    if item:
+                        for subitem in item:
+                            org[subitem.tag] = subitem.text
+                    else:
+                        org[item.tag] = item.text
+            else:
+                pass
             grantees.append(org)
     else:
         return None
@@ -137,9 +141,12 @@ def get_schedule_d(root):
         
         for tag in tags:
             child = root.find('ReturnData').find('IRS990ScheduleD').find(tag)
-            if child.text:
-                info[child.tag] = child.text
-
+            try:
+                # Catch any missing field and move on
+                if child.text:
+                    info[child.tag] = child.text
+            except AttributeError:
+                pass 
 
         return info
 
@@ -149,13 +156,35 @@ def get_schedule_d(root):
     return info
 
 def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein):
-    # add name of DAF sponsoring organization
+    '''
+    Adds the sponsoring organization EIN to each grant and converts
+    grant amounts to floats. 
+    Note that daf_dataframe may, for some 990s, be None. 
+    '''
     # details for sponsoring orgs included in different dataframe
-    daf_dataframe['Sponsor'] = daf_sponsor_ein
+    if daf_dataframe is not None:
+        # Get rid of null lines parsed from the Schedule I
+        # May be a way to do this more efficiently while parsing?
+        try:
+            daf_dataframe['BusinessNameLine1Txt'].replace('', np.nan, inplace=True)
+            daf_dataframe.dropna(subset=['BusinessNameLine1Txt'], inplace=True)
+        except KeyError:
+            # May be that an organization provided a grant to an individual
+            # seen in 990 form as GrantsOtherAsstToIndivInUSGrp
+            # Example Form: https://s3.amazonaws.com/irs-form-990/201800089349300610_public.xml
+            pass
+        # add name of DAF sponsoring organization into grantee data
+        daf_dataframe['Sponsor'] = daf_sponsor_ein
+        try:
+            daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
+        except AttributeError:
+            # Organization may not have put amounts
+            pass
+        return daf_dataframe
+    else: 
+        print(daf_sponsor_ein, "had no grants?")
+        return None
 
-    daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
-
-    return daf_dataframe
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -185,9 +214,10 @@ if __name__ == "__main__":
         #get schedule I
         grantees = get_schedule_i(tree)
         #clean schedule I
-        grantees = clean_daf_grantee_data(grantees, sponsor['EIN']) 
+        if grantees is not None:
+            grantees = clean_daf_grantee_data(grantees, sponsor['EIN']) 
         #save dataframes with org info and grantees (I)
-        grantees.to_csv(sponsor['NAME'] + "_Grantees.csv")
+            grantees.to_csv(sponsor['NAME'] + "_Grantees.csv")
         sponsor_details.to_csv(sponsor['NAME'] + "_Details.csv")
         if args.verbose:
             print("Documents saved!")

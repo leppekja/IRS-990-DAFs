@@ -34,7 +34,8 @@ def get_data(file_or_folder, start, end, verbose=False):
                         grants_made = grants_made.append(grantees)
                     else:
                         pass
-                except:
+                except Exception as e:
+                    print(e)
                     failures.append(daf_file)
             else:
                 pass
@@ -76,7 +77,7 @@ def get_data(file_or_folder, start, end, verbose=False):
     grants_made.to_csv("Grantees.csv")
     sponsors.to_csv("Sponsors.csv")
 
-    with open('Object_IDS.txt', 'w') as f:
+    with open('DAF_Object_IDS.txt', 'w') as f:
         for daf in daf_object_ids:
             f.write("{}\n".format(str(daf)))
 
@@ -100,7 +101,8 @@ def get_daf_data(tree, verbose):
         #get schedule I
         grantees = rd.get_schedule_i(tree)
         #clean schedule I
-        grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN']) 
+        if grantees is not None:
+            grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN']) 
 
         return (sponsor_details, grantees)
     else:
