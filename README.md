@@ -3,7 +3,7 @@ Code for analyzing Donor Advised Funds
 
 ## Overview
 
-Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. 
+Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
 
 ### Example Use Cases
 
@@ -61,10 +61,22 @@ c) ranking (for DAFs, in terms of funds given; for nonprofits, in terms of funds
 
 Write up summary of findings.
 
+### About the 990 Forms, Versions, and Types
+
+The purpose of this analysis is to analyze the flow of funds from donor-advised funds to nonprofit organizations. 
+
+990EZ forms are not applicable for this analysis. See the [2019 version, Part V, line 44a](https://www.irs.gov/pub/irs-pdf/f990ez.pdf), which informs the filer that if donor-advised funds were maintained, the filer must use Form 990. This form is meant for organizations with '[gross receipts of less than $200,000 and total assets of less than $500,000 at the end of their tax year.](https://www.irs.gov/pub/irs-pdf/i990ez.pdf)'
+
+990PF forms are for private foundations to complete. These forms only address donor-advised funds in [Part VII-A, Statements Regarding Activities, line 12](https://www.irs.gov/pub/irs-pdf/f990pf.pdf#page=4&zoom=auto,-266,18), asking "Did the foundation make a distribution to a donor advised fund over which the foundation or a disqualified person had advisory privileges? If 'Yes', attach statement." The [form instructions](https://www.irs.gov/pub/irs-pdf/i990pf.pdf#page=25&zoom=auto,-206,552) note the show whether this was treated as a qualifying distribution, and to "explain how the distributions will be used to accomplish a purpose described in section 170(c)(2)(B)".
+
+Note that a private foundation may control a donor-advised fund (to the best of my understanding). 
+
 ### ISSUES
 
 - Get all lines of business name txt
 - Different form versions break the code
+- Only record 990 data - SOLVED
+- Indicating yes on DAF does not imply existence of Schedule I for a minority of organizations, see EIN 626047769, Jun 2017 filing. - SOLVED
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.
 - Need to read other years' filings as well
 
@@ -75,14 +87,25 @@ Write up summary of findings.
 - Create automatic monthly updating from IRS updates
 - Host search site for organizations funded through grants from DAFs
 
-# IRS 990 Questions
+### IRS 990 Questions
 
 - Confirm disclosure requirements for donor-advised funds and write-up?
+
+### What is the Schedule I?
+
+As [found here](https://www.irs.gov/pub/irs-pdf/f990si.pdf#page=3&zoom=auto,-336,738), the IRS Form 990 Schedule I is "used by an organization that files Form 990 to provide information on **grants and other assistance** made by the filing organization during the **tax year** to **domestic organizations, domestic governments,** and **domestic individuals.**...*Grants and other assistance* include awards, prizes, **contributions**, noncash assistance, cash allocations, stipends, scholarships, fellowships, research grants, and similar payments and distributions made by the organization during the tax year."
+
+**Important!**
+
+Information is only reported in a Schedule I "for each recipient domestic organization or domestic government that received more that $5,000 aggregate of grants or assistance from the organization during the tax year".
+
+Schedule I does not include any grants or assistance provided to organizations, including domestic, for the purpose of aiding a foreign organization, government, or individual. 
 
 ### Resources
 
 [Many repositories](https://github.com/search?q=irs-990&type=) offer code on reading IRS 990 XML files to databases / individually.
 
+- https://www.grantmakers.io/
 - https://ips-dc.org/report-gilded-giving/
 - https://fas.org/sgp/crs/misc/R42595.pdf
 - https://www.philanthropy.com/article/What-Donor-Advised-Funds/156495

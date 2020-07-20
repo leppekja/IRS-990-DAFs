@@ -23,18 +23,21 @@ def get_data(file_or_folder, start, end, verbose=False):
         count = 0
         for daf_file in os.listdir(file_or_folder):
             tree = rd.read_form(document= file_or_folder + '/' + daf_file, download=False)
-            try:
-                if rd.confirm_daf_fund(tree):
-                    daf_object_ids.append(daf_file)
-                    sponsor_details, grantees = get_daf_data(tree, verbose)
-                    
-                    #append dataframes with org info and grantees (I)
-                    sponsors = sponsors.append(sponsor_details)
-                    grants_made = grants_made.append(grantees)
-                else:
-                    pass
-            except:
-                failures.append(daf_file)
+            if rd.get_form_type(tree) == '990':
+                try:
+                    if rd.confirm_daf_fund(tree):
+                        daf_object_ids.append(daf_file)
+                        sponsor_details, grantees = get_daf_data(tree, verbose)
+                        
+                        #append dataframes with org info and grantees (I)
+                        sponsors = sponsors.append(sponsor_details)
+                        grants_made = grants_made.append(grantees)
+                    else:
+                        pass
+                except:
+                    failures.append(daf_file)
+            else:
+                pass
 
             if count == end:
                 break
@@ -59,9 +62,13 @@ def get_data(file_or_folder, start, end, verbose=False):
                 daf_object_ids.append(form)
                 sponsor_details, grantees = get_daf_data(tree, verbose)
                 #append dataframes with org info and grantees (I)
-                print(sponsor_details)
                 sponsors = sponsors.append(sponsor_details)
-                grants_made = grants_made.append(grantees)
+                
+                if grantees:
+                    # Schedule I may not exist for some organizations
+                    grants_made = grants_made.append(grantees)
+                else:
+                    pass
             else:
                 pass
 
@@ -93,7 +100,7 @@ def get_daf_data(tree, verbose):
         #get schedule I
         grantees = rd.get_schedule_i(tree)
         #clean schedule I
-        grantees = rd.clean_daf_grantee_data(grantees, sponsor['NAME']) 
+        #grantees = rd.clean_daf_grantee_data(grantees, sponsor['NAME']) 
 
         return (sponsor_details, grantees)
     else:
