@@ -100,7 +100,7 @@ def get_daf_data(tree, verbose):
         #get schedule I
         grantees = rd.get_schedule_i(tree)
         #clean schedule I
-        #grantees = rd.clean_daf_grantee_data(grantees, sponsor['NAME']) 
+        grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN']) 
 
         return (sponsor_details, grantees)
     else:

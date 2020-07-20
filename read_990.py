@@ -107,7 +107,8 @@ def get_schedule_i(root):
         for child in root.find('ReturnData').find('IRS990ScheduleI'):
             org = {}
             for item in child:
-                if item:
+                #Get only grantee information, not Supplemental Information
+                if item == 'RecipientTable':
                     for subitem in item:
                         org[subitem.tag] = subitem.text
                 else:
@@ -128,14 +129,17 @@ def get_schedule_d(root):
     Output: Dictionary
     '''
     if read_xmls.search_tags(root, 'ScheduleD'):
+        tags = ['DonorAdvisedFundsHeldCnt', 'DonorAdvisedFundsContriAmt', 'DonorAdvisedFundsGrantsAmt',
+                'DonorAdvisedFundsVlEOYAmt', 'DisclosedOrgLegCtrlInd', 'DisclosedForCharitablePrpsInd',
+                'FundsAndOtherAccountsHeldCnt','FundsAndOtherAccountsContriAmt',
+                'FundsAndOtherAccountsGrantsAmt','FundsAndOtherAccountsVlEOYAmt']
         info = {}
-        count = 0
-        for child in root.find('ReturnData').find('IRS990ScheduleD'):
-            if count == 6:
-                break
-            else:
+        
+        for tag in tags:
+            child = root.find('ReturnData').find('IRS990ScheduleD').find(tag)
+            if child.text:
                 info[child.tag] = child.text
-                count += 1
+
 
         return info
 
@@ -144,10 +148,10 @@ def get_schedule_d(root):
 
     return info
 
-def clean_daf_grantee_data(daf_dataframe, daf_sponsor):
+def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein):
     # add name of DAF sponsoring organization
     # details for sponsoring orgs included in different dataframe
-    daf_dataframe['Sponsor'] = daf_sponsor
+    daf_dataframe['Sponsor'] = daf_sponsor_ein
 
     daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
 
@@ -181,7 +185,7 @@ if __name__ == "__main__":
         #get schedule I
         grantees = get_schedule_i(tree)
         #clean schedule I
-        grantees = clean_daf_grantee_data(grantees, sponsor['NAME']) 
+        grantees = clean_daf_grantee_data(grantees, sponsor['EIN']) 
         #save dataframes with org info and grantees (I)
         grantees.to_csv(sponsor['NAME'] + "_Grantees.csv")
         sponsor_details.to_csv(sponsor['NAME'] + "_Details.csv")

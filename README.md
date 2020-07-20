@@ -75,10 +75,18 @@ Note that a private foundation may control a donor-advised fund (to the best of 
 
 - Get all lines of business name txt
 - Different form versions break the code
-- Only record 990 data - SOLVED
-- Indicating yes on DAF does not imply existence of Schedule I for a minority of organizations, see EIN 626047769, Jun 2017 filing. - SOLVED
+- A number of organizations marked Yes as maintaining a DAF or similar fund without completing summary information in Schedule D part 1. See [Winona State University Foundation June 2018 Filing](https://s3.amazonaws.com/irs-form-990/201800349349300310_public.xml). Unclear whether this is an oversight, or there is some reason this is fine. 
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.
-- Need to read other years' filings as well
+- Need to read other years' filings as well, likely will be field changes. Use Open Data Collective's Concordance?
+- Only record 990 data - SOLVED
+- Schedule D endowment returning - SOLVED
+- Grantee supplementary Schedule I information returning - SOLVED
+- What are *FundsAndOtherAccountsHeld*? Should these be included? - SOLVED (mostly)
+
+See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** section. As of now, they are included. It is unclear whether grants mades from these types of funds are listed on the Schedule I, so if anyone knows, please reach out!  
+
+- Indicating yes on DAF does not imply existence of Schedule I for a minority of organizations, see EIN 626047769, Jun 2017 filing. - SOLVED
+
 
 ### Next Steps
 
