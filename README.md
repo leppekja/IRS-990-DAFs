@@ -19,16 +19,15 @@ Code for analyzing Donor Advised Funds
 - [What is the Schedule I?](#what-is-the-schedule-i)
 - [Resources](#resources)
 
-
 ## Overview
 
-Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
+Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attmpts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
 
 ### Example Use Cases
 
 - Identify which nonprofits obtain the most grants from donor-advised funds. 
 - Identify top donor-advised funds
-- Examine various measures of grant spread, i.e., how diverse are the grantees across organization size, geographic area, mission or cause, etc. 
+- Examine various measures of grant spread, i.e., how diverse are the grantees across organization size, geographic area, mission or cause, etc.
 
 ### Step 1
 ##### COMPLETE
@@ -56,10 +55,8 @@ IRS 990 Forms in XML can be downloaded [in bulk from AWS](https://docs.opendata.
 
 Otherwise, you can download the index for each year and manually select individual forms at https://s3.amazonaws.com/irs-form-990/index_ **specific year here**.csv. These files are also accessible in JSON format. Note that according to Applied Nonprofit Research, this is [unreliable](https://appliednonprofitresearch.com/posts/2020/06/skip-the-irs-990-efile-indices/).
 
-
 ### Step 3a
 ##### COMPLETE
-
 
 Use code from Step 1 to read in all organizations collected in step 2. Output will be a data frame with details on all sponsoring organizations (those with a DAF) and a dataframe with all nonprofit organizations that received gifts > $5,000.
 
@@ -73,12 +70,10 @@ We need to read the data into a database accessible online for the web applicati
 ### Step 4
 ##### INCOMPLETE
 
-
 We need to geocode the addresses of both the sponsoring organizations and the grantees. 
 
 ### Step 5
 ##### INCOMPLETE
-
 
 Set up web search application to easily search an organization and get back either:
 a) the organizations that it has funded through a donor-advised fund
@@ -87,7 +82,6 @@ c) ranking (for DAFs, in terms of funds given; for nonprofits, in terms of funds
 
 ### Step 6
 ##### INCOMPLETE
-
 
 Write up summary of findings.
 
@@ -116,7 +110,6 @@ Note that a private foundation may control a donor-advised fund (to the best of 
 See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** section. As of now, they are included. It is unclear whether grants mades from these types of funds are listed on the Schedule I, so if anyone knows, please reach out!  
 
 - Indicating yes on DAF does not imply existence of Schedule I for a minority of organizations, see EIN 626047769, Jun 2017 filing. - SOLVED
-
 
 ### Next Steps
 
