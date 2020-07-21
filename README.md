@@ -3,21 +3,21 @@ Code for analyzing Donor Advised Funds
 
 ### Table of Contents
 
-[Overview](#overview)
-[Example Use Cases](#example-use-cases)
-[Step 1](#step-1)
-[Step 2](#step-2)
-[Step 3a](#step-3a)
-[Step 3b](#step-3b)
-[Step 4](#step-4)
-[Step 5](#step-5)
-[Step 6](#step-6)
-[About the 990 Forms, Versions, and Types](#about-the-990-forms,-versions,-and-types)
-[Issues](#issues)
-[Next Steps](#next-steps)
-[IRS 990 Questions](#irs-990-questions)
-[What is the Schedule I?](#what-is-the-schedule-i?)
-[Resources](#resources)
+- [Overview](#overview)
+- [Example Use Cases](#example-use-cases)
+- [Step 1](#step-1)
+- [Step 2](#step-2)
+- [Step 3a](#step-3a)
+- [Step 3b](#step-3b)
+- [Step 4](#step-4)
+- [Step 5](#step-5)
+- [Step 6](#step-6)
+- [About the 990 Forms, Versions, and Types](#about-the-990-forms-versions-and-types)
+- [Issues](#issues)
+- [Next Steps](#next-steps)
+- [IRS 990 Questions](#irs-990-questions)
+- [What is the Schedule I?](#what-is-the-schedule-i)
+- [Resources](#resources)
 
 
 ## Overview
