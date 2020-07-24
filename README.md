@@ -117,6 +117,7 @@ See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** secti
 - Develop interactive online map 
 - Create automatic monthly updating from IRS updates
 - Host search site for organizations funded through grants from DAFs
+- Automatic report generation for organiozations and sector-wide
 
 ### IRS 990 Questions
 
