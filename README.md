@@ -63,9 +63,9 @@ Use code from Step 1 to read in all organizations collected in step 2. Output wi
 fields.csv contains the fields and variable descriptions for those collected within the scope of this analysis. This is a work in progress and may be updated to account for differing versions. 
 
 ### Step 3b
-##### INCOMPLETE
+##### COMPLETE
 
-We need to read the data into a database accessible online for the web application. 
+We need to read the data into a database accessible online for the web application. We're using a PostgreSQL database on AWS RDS. create.sql is a psql script to create the schema; otherwise, the schema is also implemented through Django's Model classes. A ERD diagram is in daf_erd_diagram_sketch.png and will be updated soon. 
 
 ### Step 4
 ##### INCOMPLETE
@@ -76,9 +76,13 @@ We need to geocode the addresses of both the sponsoring organizations and the gr
 ##### INCOMPLETE
 
 Set up web search application to easily search an organization and get back either:
-a) the organizations that it has funded through a donor-advised fund
-b) the donor-advised funds that have supported that organization
-c) ranking (for DAFs, in terms of funds given; for nonprofits, in terms of funds recieved)
+
+- the organizations that it has funded through a donor-advised fund
+- the donor-advised funds that have supported that organization
+- ranking (for DAFs, in terms of funds given; for nonprofits, in terms of funds recieved)
+- visualization of where funds have been sent/recieved. 
+
+For this application, we're using a Django framework hosted on AWS Lightsail. 
 
 ### Step 6
 ##### INCOMPLETE
@@ -115,8 +119,8 @@ See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** secti
 
 - Geocode grantee and sponsoring organizations addresses
 - Develop interactive online map 
+- Enable Rest API access
 - Create automatic monthly updating from IRS updates
-- Host search site for organizations funded through grants from DAFs
 - Automatic report generation for organiozations and sector-wide
 
 ### IRS 990 Questions
