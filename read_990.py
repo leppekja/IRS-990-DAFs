@@ -17,6 +17,45 @@ All fields in:
 ReturnData / IRS990ScheduleI
 ReturnData / IRS990ScheduleD
 '''
+# See models.py for primary source. Additional id col created in tables
+# need to figure out pipeline into django better
+# these are only for testing in summer 2020
+
+SPONSOR_COLUMN_NAMES = [
+        'sponsor_ein',
+        'name',
+        'address_line_1',
+        'city',
+        'state',
+        'zip_code',
+        'latitude',
+        'longitude',
+        'daf_held_cnt',
+        'daf_contri_amt',
+        'daf_grants_amt', 
+        'daf_eoy_amt',
+        'disclosed_legal',
+        'disclosed_prps',
+        'other_act_held_cnt',
+        'other_act_contri_amt',
+        'other_act_grants_amt',
+        'other_act_eoy_amt']
+
+GRANTEE_COLUMN_NAMES = ['grantee_ein',
+                        'name',
+                        'address_line_1',
+                        'city',
+                        'state',
+                        'zip_code',
+                        'latitude',
+                        'longitude',
+                        'irs_section_desc']
+
+DONATION_COLUMN_NAMES = ['grantee_ein',
+                        'sponsor_ein',
+                        'cash_grant_amt',
+                        'purpose_of_grant',
+                        'grant_type']
 
 def read_form(document=None, download=True):
     '''
@@ -180,6 +219,7 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein):
         except AttributeError:
             # Organization may not have put amounts
             pass
+
         return daf_dataframe
     else: 
         print(daf_sponsor_ein, "had no grants?")

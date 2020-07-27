@@ -100,7 +100,7 @@ def get_daf_data(tree, verbose):
         sponsor_details = pd.DataFrame({**sponsor, **daf_details}, index=[0])
         #get schedule I
         grantees = rd.get_schedule_i(tree)
-        #clean schedule I
+        #clean schedule I for database loading
         if grantees is not None:
             grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN']) 
 
