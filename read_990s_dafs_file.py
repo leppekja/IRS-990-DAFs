@@ -74,8 +74,8 @@ def get_data(file_or_folder, start, end, verbose=False):
                 pass
 
 
-    grants_made.to_csv("Grantees.csv")
-    sponsors.to_csv("Sponsors.csv")
+    grants_made.to_csv("Grantees.csv", index=False)
+    sponsors.to_csv("Sponsors.csv", index=False)
 
     with open('DAF_Object_IDS.txt', 'w') as f:
         for daf in daf_object_ids:
