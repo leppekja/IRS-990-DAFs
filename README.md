@@ -101,13 +101,22 @@ Note that a private foundation may control a donor-advised fund (to the best of 
 
 ### ISSUES
 
+##### ETL
 - Get all lines of business name txt
 - Different form versions break the code
+##### Database Design
+- Need to add year for different tax returns / grants. Composite primary keys don't work with Django? 
+##### Data Questions
 - A number of organizations marked Yes as maintaining a DAF or similar fund without completing summary information in Schedule D part 1. See [Winona State University Foundation June 2018 Filing](https://s3.amazonaws.com/irs-form-990/201800349349300310_public.xml). Unclear whether this is an oversight, or there is some reason this is fine. 
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.
+##### Data Cleaning
 - Need to read other years' filings as well, likely will be field changes. Use Open Data Collective's Concordance?
+##### Batch Testing 
 - Organization may file two tax returns in a single year, which results in a database issue if the EIN is used as a primary key. See, for instance, EIN 910668368, which filed in 2018 both for the 2016-2017 and 2017-2018 tax years. This is really only relevant if syncing with the AWS database and filtering by the year Object_id, as well as the batch uploading from csv file in db.py.
 - db.py uploads a batch file of Sponsors to a database, however, Django/PSQL does not maintain order of columns upon updating. If the model is changed, the .csv column order may have to be updated to. Have to check the table schema to be sure. 
+- Data needs improved cleaning / database needs to account for these. irs_section_desc allows for 10 varchar, ein 46001406 included a city for this field.
+- Batch csv upload, when filling the donation table, cannot find all the sponsor ein for some reason. May have been deleted through data cleaning? 223089640, for example. 
+##### Solved
 - Only record 990 data - SOLVED
 - Schedule D endowment returning - SOLVED
 - Grantee supplementary Schedule I information returning - SOLVED

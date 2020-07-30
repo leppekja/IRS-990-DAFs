@@ -31,7 +31,11 @@ database_grantee_col_names = ['grantee_ein',
                             'latitude',
                             'longitude',
                             'irs_section_desc']
-
+database_donation_col_names = [ 'cash_grant_amt',
+                                'purpose_of_grant',
+                                'grant_type',
+                                'grantee_ein',
+                                'sponsor_ein']
 
 def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     '''
@@ -86,7 +90,8 @@ def update_grantee_csv(file_path, suffix, drop_duplicates=True):
 
     data.columns = database_grantee_col_names
 
-    data['zip_code'] = data['zip_code'].astype(str).str[:5]
+    data['zip_code'] = data['zip_code'].astype(str).str[:5].astype('int64')
+    data['irs_section_desc'] = data['irs_section_desc'].str[:10]
 
     if data.isna().any().any():
         data.fillna(0, inplace=True)
@@ -96,6 +101,30 @@ def update_grantee_csv(file_path, suffix, drop_duplicates=True):
 
     data.drop_duplicates(subset='grantee_ein', inplace=True)
     data.to_csv('Grantees' + suffix + '.csv', index=False)
+
+    return None
+
+def update_donation_csv(file_path, suffix, drop_duplicates=True):
+    data = pd.read_csv(file_path)
+
+    data = data.loc[:, ['CashGrantAmt', 'PurposeOfGrantTxt','GrantTypeTxt','RecipientEIN', 'Sponsor']]
+    data.columns = database_donation_col_names
+    data['purpose_of_grant'] = data['purpose_of_grant'].str[:100]
+    data['grant_type'] = data['grant_type'].str[:50]
+
+    data.dropna(subset=['grantee_ein'], inplace=True)
+    # Need to change this - grant type is frequently null
+    if data.isna().any().any():
+        data.fillna(0, inplace=True)
+
+    for col in data.select_dtypes(include='float64').columns.values:
+        data[col] = data[col].astype('int64')
+    data.index.name = 'id'
+
+    data.to_csv('Donations' + suffix + '.csv', index=True)
+    return None
+
+
 
 def csv_load(file_path, table_name, host, port, user_name, db_name, password):
     '''
@@ -123,20 +152,20 @@ def csv_load(file_path, table_name, host, port, user_name, db_name, password):
         elif table_name.lower() == 'grantees':
             copy = """COPY dafs_grantee
                   FROM STDIN
-                  WITH (FORMAT csv, HEADER TRUE);"""            
+                  WITH (FORMAT csv, HEADER TRUE);""" 
+        elif table_name.lower() == 'donations':
+             copy = """COPY dafs_donation
+                  FROM STDIN
+                  WITH (FORMAT csv, HEADER TRUE);""" 
+        else:
+            print("Check the table name!")
+                                        
         try:
             cur.copy_expert(copy, f)
+            conn.commit()
         except Exception as e:
             print(e)
             conn.rollback()
-
-        # if table_name.lower() == 'grantees':
-        #     copy_grantee = """COPY Grantee
-        #             FROM STDIN
-        #             WITH (FORMAT csv, HEADER TRUE);"""
-        #     self.cur.copy_expert(copy, f)
-
-            conn.commit()
     
     cur.close()
     conn.close()
