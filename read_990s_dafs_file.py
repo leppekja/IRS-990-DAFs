@@ -109,6 +109,8 @@ def get_daf_data(tree, verbose):
         return None
 
 #################
+# CODE ANALYSIS #
+#################
 '''
 Check form versions and types to analyze issues that arise
 '''

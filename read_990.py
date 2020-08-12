@@ -99,7 +99,6 @@ def confirm_daf_fund(tree):
     Output: Boolean
     '''
     # Does this change based on form type or version?
-    # if not 990, work?
     if tree.find('ReturnData').find('IRS990').find('DonorAdvisedFundInd').text == str(1):
         return True
     else:
@@ -108,12 +107,18 @@ def confirm_daf_fund(tree):
 def get_form_headers(tree):
     '''
     Returns a dictionary with organization EIN,
-    name, and US address from a 990 form.
+    name, US address, Tax Year, and Tax Period Beginning and End from a 990 form.
     '''
-    #obtain data from tree
+    # obtain data from tree
     data = {}
     data['EIN'] = read_xmls.search_tree(tree, 'EIN')['EIN']
-    data['NAME'] = read_xmls.search_tree(tree, 'BusinessName', True)['BusinessNameLine1Txt']
+    # Name may have multiple lines
+    name_fields = read_xmls.search_tree(tree, 'BusinessName', True)
+    data['NAME'] = ' '.join(name_fields.values())
+    
+    data['TAXYEAR'] = read_xmls.search_tree(tree, 'TaxYr')['TaxYr']
+    data['TAXYRSTART'] = read_xmls.search_tree(tree, 'TaxPeriodEndDt')['TaxPeriodEndDt']
+    data['TAXYREND'] = read_xmls.search_tree(tree, 'TaxPeriodBeginDt')['TaxPeriodBeginDt']
 
     for child in tree.find(".//Filer/USAddress"):
         data[child.tag] = child.text
@@ -132,6 +137,7 @@ def get_summary_data(tree):
      amounts paid, salaries, other compensation.
     '''
     # probably should add something here at some point
+    # low priority, though, see Open990.org for this data
     return None
 
 def get_schedule_i(root):
