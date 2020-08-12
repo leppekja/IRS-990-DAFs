@@ -21,7 +21,7 @@ Code for analyzing Donor Advised Funds
 
 ## Overview
 
-Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attmpts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
+Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
 
 ### Example Use Cases
 
@@ -116,6 +116,11 @@ Note that a private foundation may control a donor-advised fund (to the best of 
 - db.py uploads a batch file of Sponsors to a database, however, Django/PSQL does not maintain order of columns upon updating. If the model is changed, the .csv column order may have to be updated to. Have to check the table schema to be sure. 
 - Data needs improved cleaning / database needs to account for these. irs_section_desc allows for 10 varchar, ein 46001406 included a city for this field.
 - Batch csv upload, when filling the donation table, cannot find all the sponsor ein for some reason. May have been deleted through data cleaning? 223089640, for example. 
+##### Website Design
+- Django Model in sponsor_detail seems to identify the organization name as organization.grantee_ein
+- Navigation bar does not collapse in for small screens; need to make mobile friendly
+- Implement summary queries for total amount recieved/given for organizations
+- Javascript for giving over the years charts not working
 ##### Solved
 - Only record 990 data - SOLVED
 - Schedule D endowment returning - SOLVED
