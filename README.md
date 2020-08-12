@@ -49,7 +49,7 @@ Optional arguments <start> and <end> allow selection by index.
 
 Iterate through all 990 forms and select those with a donor advised fund. Collect object IDs and gather into a file for further analysis.
 
-IRS 990 Forms in XML can be downloaded [in bulk from AWS](https://docs.opendata.aws/irs-990/readme.html) using the [AWS CLI](https://docs.aws.amazon.com/cli/index.html). This was the simplest command I could find, downloading only forms from 2018:
+IRS 990 Forms in XML can be downloaded [in bulk from AWS](https://docs.opendata.aws/irs-990/readme.html) using the [AWS CLI](https://docs.aws.amazon.com/cli/index.html). This was the simplest (probably least efficient also) command I could find, downloading only forms from 2018:
 
     aws s3 sync s3://irs-form-990/ ./<local file here> --exclude "*" --include "2018*"
 
@@ -65,7 +65,7 @@ fields.csv contains the fields and variable descriptions for those collected wit
 ### Step 3b
 ##### COMPLETE
 
-We need to read the data into a database accessible online for the web application. We're using a PostgreSQL database on AWS RDS. create.sql is a psql script to create the schema; otherwise, the schema is also implemented through Django's Model classes. A ERD diagram is in daf_erd_diagram_sketch.png and will be updated soon. 
+We need to read the data into a database accessible online for the web application. We're using a PostgreSQL database on AWS RDS. create.sql is a psql script to create the schema; otherwise, the schema is also implemented through Django's Model classes (will be uploaded later). A ERD diagram is in daf_erd_diagram_sketch.png and will be updated soon. 
 
 ### Step 4
 ##### INCOMPLETE
@@ -97,15 +97,12 @@ The purpose of this analysis is to analyze the flow of funds from donor-advised 
 
 990PF forms are for private foundations to complete. These forms only address donor-advised funds in [Part VII-A, Statements Regarding Activities, line 12](https://www.irs.gov/pub/irs-pdf/f990pf.pdf#page=4&zoom=auto,-266,18), asking "Did the foundation make a distribution to a donor advised fund over which the foundation or a disqualified person had advisory privileges? If 'Yes', attach statement." The [form instructions](https://www.irs.gov/pub/irs-pdf/i990pf.pdf#page=25&zoom=auto,-206,552) note the show whether this was treated as a qualifying distribution, and to "explain how the distributions will be used to accomplish a purpose described in section 170(c)(2)(B)".
 
-Note that a private foundation may control a donor-advised fund (to the best of my understanding). 
+Note that a private foundation may control a donor-advised fund, but these organizations would then need to file a 990, rather than a 990PF (to the best of my understanding). Right now, I am only using the 990 forms. 
 
 ### ISSUES
 
 ##### ETL
-- Get all lines of business name txt
 - Different form versions break the code
-##### Database Design
-- Need to add year for different tax returns / grants. Composite primary keys don't work with Django? 
 ##### Data Questions
 - A number of organizations marked Yes as maintaining a DAF or similar fund without completing summary information in Schedule D part 1. See [Winona State University Foundation June 2018 Filing](https://s3.amazonaws.com/irs-form-990/201800349349300310_public.xml). Unclear whether this is an oversight, or there is some reason this is fine. 
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.
@@ -120,12 +117,14 @@ Note that a private foundation may control a donor-advised fund (to the best of 
 - Django Model in sponsor_detail seems to identify the organization name as organization.grantee_ein
 - Navigation bar does not collapse in for small screens; need to make mobile friendly
 - Implement summary queries for total amount recieved/given for organizations
-- Javascript for giving over the years charts not working
+- Javascript for giving over the years charts not set up
 ##### Solved
+- Get all lines of business name txt - SOLVED
 - Only record 990 data - SOLVED
 - Schedule D endowment returning - SOLVED
 - Grantee supplementary Schedule I information returning - SOLVED
 - What are *FundsAndOtherAccountsHeld*? Should these be included? - SOLVED (mostly)
+- Need to add year for different tax returns / grants. Composite primary keys don't work with Django? -SOLVED
 
 See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** section. As of now, they are included. It is unclear whether grants mades from these types of funds are listed on the Schedule I, so if anyone knows, please reach out!  
 
