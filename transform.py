@@ -4,6 +4,11 @@ Functions for step 2 of ETL
 Completes any data cleaning steps not solved during XML parsing
 and readies data for csv export or database bulk upload
 '''
+
+import argparse
+import pandas as pd
+
+
 sponsor_col_names = [
         'sponsor_ein',
         'name',
@@ -13,7 +18,6 @@ sponsor_col_names = [
         'zip_code',
         'latitude',
         'longitude']
-
 
 worth_col_names = [
         'daf_held_cnt',
@@ -25,9 +29,11 @@ worth_col_names = [
         'other_act_held_cnt',
         'other_act_contri_amt',
         'other_act_grants_amt',
-        'other_act_eoy_amt']
+        'other_act_eoy_amt',
+        'sponsor_ein_id',
+        'tax_year']
 
-database_grantee_col_names = ['grantee_ein',
+grantee_col_names = ['grantee_ein',
                             'name',
                             'address_line_1',
                             'city',
@@ -37,11 +43,17 @@ database_grantee_col_names = ['grantee_ein',
                             'longitude',
                             'irs_section_desc']
 
-database_donation_col_names = [ 'cash_grant_amt',
+donation_col_names = [ 'cash_grant_amt',
                                 'purpose_of_grant',
                                 'grant_type',
-                                'grantee_ein',
-                                'sponsor_ein']
+                                'grantee_ein_id',
+                                'sponsor_ein_id',
+                                'tax_year']
+
+taxperiod_col_names = ['tax_year',
+                        'period_begin',
+                        'period_end',
+                        'sponsor_ein_id']
 
 def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     '''
@@ -62,26 +74,63 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     if 'longitude' not in data.columns:
         data.insert(7, 'longitude', 0)
 
-    # Copy from for bulk upload; the names need to match and be in the correct order
-    data.columns = database_col_names
 
-    data['zip_code'] = data['zip_code'].astype(str).str[:5]
-    # Some organizations filed twice in one year, so if testing,
-    # can just drop these organizations 
-    if drop_duplicates:
-        data.drop_duplicates(subset='sponsor_ein', inplace=True)
-    
+
+    data['ZIPCd'] = data['ZIPCd'].astype(str).str[:5]
+
     if data.isna().any().any():
         data.fillna(0, inplace=True)
 
     for col in data.select_dtypes(include='float64').columns.values:
         if (col != 'latitude') and (col != 'longtitude'):
             data[col] = data[col].astype('int64')
+
+    # Some organizations filed twice in one year, so for sponsor table
+    # can just drop these organizations
+    # TAX PERIOD TABLE
+    date_data = data.loc[:,['TAXYEAR','TAXYRSTART','TAXYREND','EIN']]
+    date_data.columns = taxperiod_col_names
+    date_data.to_csv('Taxperiod' + suffix + '.csv', index=False)
+    
+    del data['TAXYRSTART']
+    del data['TAXYREND']
+
+    # WORTH TABLE
+    worth_data = data.loc[:,['DonorAdvisedFundsHeldCnt',
+                    'DonorAdvisedFundsContriAmt',
+                    'DonorAdvisedFundsGrantsAmt',
+                    'DonorAdvisedFundsVlEOYAmt',
+                    'DisclosedOrgLegCtrlInd',
+                    'DisclosedForCharitablePrpsInd',
+                    'FundsAndOtherAccountsHeldCnt',
+                    'FundsAndOtherAccountsContriAmt',
+                    'FundsAndOtherAccountsGrantsAmt',
+                    'FundsAndOtherAccountsVlEOYAmt',
+                    'EIN',
+                    'TAXYEAR']]
+
+    worth_data.columns = worth_col_names
+    worth_data.to_csv('Worth' + suffix + '.csv', index=False)
+
+    # Copy from for bulk upload; the names need to match and be in the correct order
+    data = data.loc[:,['EIN','NAME','AddressLine1Txt','CityNm','StateAbbreviationCd','ZIPCd']]
+    # Holdouts for geocoding
+    # may just end up using zip code with google maps/open street map API?
+    if 'latitude' not in data.columns:
+        data.insert(6, 'latitude', 0)
+    if 'longitude' not in data.columns:
+        data.insert(7, 'longitude', 0)
+    
+    data.columns = sponsor_col_names
+
+    if drop_duplicates:
+        data.drop_duplicates(subset='sponsor_ein', inplace=True)
+    
     data.to_csv('Sponsors' + suffix + '.csv', index=False)
 
     return None
 
-    def update_grantee_csv(file_path, suffix, drop_duplicates=True):
+def update_grantee_csv(file_path, suffix, drop_duplicates=True):
     '''
     Data cleaning steps for uploading a batch testing csv
     to the database.
@@ -101,13 +150,19 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     data.insert(7,'longitude',0)
     del data['RecipientEIN']
 
-    data.columns = database_grantee_col_names
+    data.columns = grantee_col_names
 
-    data['zip_code'] = data['zip_code'].astype(str).str[:5].astype('int64')
+    # get rid of empty rows
+    data.dropna(subset=['grantee_ein'], inplace=True)
+
     data['irs_section_desc'] = data['irs_section_desc'].str[:10]
 
     if data.isna().any().any():
         data.fillna(0, inplace=True)
+
+    data['zip_code'] = data['zip_code'].astype(str).str.strip('.')
+
+    data['zip_code'] = data['zip_code'].astype(str).str[:5].astype(float).astype('int64')
 
     for col in data.select_dtypes(include='float64').columns.values:
         data[col] = data[col].astype('int64')
@@ -120,12 +175,12 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
 def update_donation_csv(file_path, suffix, drop_duplicates=True):
     data = pd.read_csv(file_path)
 
-    data = data.loc[:, ['CashGrantAmt', 'PurposeOfGrantTxt','GrantTypeTxt','RecipientEIN', 'Sponsor']]
-    data.columns = database_donation_col_names
+    data = data.loc[:, ['CashGrantAmt', 'PurposeOfGrantTxt','GrantTypeTxt','RecipientEIN', 'Sponsor','TAXYEAR']]
+    data.columns = donation_col_names
     data['purpose_of_grant'] = data['purpose_of_grant'].str[:100]
     data['grant_type'] = data['grant_type'].str[:50]
 
-    data.dropna(subset=['grantee_ein'], inplace=True)
+    data.dropna(subset=['grantee_ein_id'], inplace=True)
     # Need to change this - grant type is frequently null
     if data.isna().any().any():
         data.fillna(0, inplace=True)
@@ -136,3 +191,20 @@ def update_donation_csv(file_path, suffix, drop_duplicates=True):
 
     data.to_csv('Donations' + suffix + '.csv', index=True)
     return None
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+            description='Clean spreadsheet data \
+                        for bulk uploading')
+    parser.add_argument('-sponsor',type=str,
+                    help='link or file name to csv')
+    parser.add_argument('-grantee',type=str,
+                    help='link or file name to csv')
+    parser.add_argument('-suffix',type=str,
+                    help='suffix for file names')                                                          
+    args = parser.parse_args()
+    update_sponsor_csv(file_path = args.sponsor, suffix=args.suffix)
+    update_donation_csv(file_path = args.grantee, suffix=args.suffix)
+    update_grantee_csv(file_path = args.grantee, suffix=args.suffix)

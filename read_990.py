@@ -200,7 +200,7 @@ def get_schedule_d(root):
 
     return info
 
-def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein):
+def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein, daf_sponsor_taxyear):
     '''
     Adds the sponsoring organization EIN to each grant and converts
     grant amounts to floats. 
@@ -220,6 +220,7 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein):
             pass
         # add name of DAF sponsoring organization into grantee data
         daf_dataframe['Sponsor'] = daf_sponsor_ein
+        daf_dataframe['TAXYEAR'] = daf_sponsor_taxyear
         try:
             daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
         except AttributeError:

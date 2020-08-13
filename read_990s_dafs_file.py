@@ -102,7 +102,7 @@ def get_daf_data(tree, verbose):
         grantees = rd.get_schedule_i(tree)
         #clean schedule I for database loading
         if grantees is not None:
-            grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN']) 
+            grantees = rd.clean_daf_grantee_data(grantees, sponsor['EIN'], sponsor['TAXYEAR']) 
 
         return (sponsor_details, grantees)
     else:
