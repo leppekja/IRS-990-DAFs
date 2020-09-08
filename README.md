@@ -32,7 +32,7 @@ Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the
 ### Step 1
 ##### COMPLETE
 
-Code for reading XML [Schedule I](https://www.irs.gov/pub/irs-pdf/f990si.pdf) forms. Files are available in XML format from multiple locations, including AWS (easily accessible through [open990.org](https://www.open990.org/org/680480736/network-for-good-inc/)). Need to collect, for each organization, the name, address, EIN, IRS organization type e.g. 501(c)(3), and amount of grant, with a indicator for which DAF the funds were distributed through. Will read this data into a Pandas Dataframe for analysis. 
+Code for reading XML [Schedule I](https://www.irs.gov/pub/irs-pdf/f990si.pdf) forms. Files are available in XML format from multiple locations, including AWS (easily accessible through [open990.org](https://www.open990.org/org/680480736/network-for-good-inc/)). Need to collect, for each organization, the name, address, EIN, IRS organization type e.g. 501(c)(3), and amount of grant, with a indicator for which DAF the funds were distributed through. Will read this data into a Pandas Dataframe for analysis. The [Community Concordance](https://nonprofit-open-data-collective.github.io/irs-efile-master-concordance-file/) allows us to map field locations across many versions of the 990. We are working with variables labeled PC, as well as the header. The paths for the Schedule-D information do change depending on the version.
 
 read_990.py contains functions to query an XML document. From the command line:
 
@@ -108,6 +108,8 @@ Note that a private foundation may control a donor-advised fund, but these organ
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.
 ##### Data Cleaning
 - Need to read other years' filings as well, likely will be field changes. Use Open Data Collective's Concordance?
+- Scholarship support is incorrectly recorded as of now.
+- Adjust address issues; make sure line 1 and 2 are joined. Note also issues with 'c/o NAME' in the AddressLine1Txt field like in [this form](https://s3.amazonaws.com/irs-form-990/201900089349300935_public.xml).
 ##### Batch Testing 
 - db.py uploads a batch file of Sponsors to a database, however, Django/PSQL does not maintain order of columns upon updating. If the model is changed, the .csv column order may have to be updated to. Have to check the table schema to be sure. 
 - Data needs improved cleaning / database needs to account for these. irs_section_desc allows for 10 varchar, ein 46001406 included a city for this field.

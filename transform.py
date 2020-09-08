@@ -72,8 +72,7 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     if 'latitude' not in data.columns:
         data.insert(6, 'latitude', 0)
     if 'longitude' not in data.columns:
-        data.insert(7, 'longitude', 0)
-
+        data.insert(7, 'longitude', 0)       
 
 
     data['ZIPCd'] = data['ZIPCd'].astype(str).str[:5]
@@ -82,7 +81,8 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
         data.fillna(0, inplace=True)
 
     for col in data.select_dtypes(include='float64').columns.values:
-        if (col != 'latitude') and (col != 'longtitude'):
+        # Don't want to lose leading zeros on the EIN numbers
+        if (col != 'latitude') and (col != 'longtitude') and (col != 'EIN'):
             data[col] = data[col].astype('int64')
 
     # Some organizations filed twice in one year, so for sponsor table
@@ -90,7 +90,9 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
     # TAX PERIOD TABLE
     date_data = data.loc[:,['TAXYEAR','TAXYRSTART','TAXYREND','EIN']]
     date_data.columns = taxperiod_col_names
-    date_data.to_csv('Taxperiod' + suffix + '.csv', index=False)
+    # for bulk upload, model has a serial as id (autofield in Django)
+    # need to save with an index to make copy export work
+    date_data.to_csv('Taxperiod' + suffix + '.csv', index=True, index_label='id')
     
     del data['TAXYRSTART']
     del data['TAXYREND']
@@ -110,7 +112,7 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
                     'TAXYEAR']]
 
     worth_data.columns = worth_col_names
-    worth_data.to_csv('Worth' + suffix + '.csv', index=False)
+    worth_data.to_csv('Worth' + suffix + '.csv', index=True, , index_label='id')
 
     # Copy from for bulk upload; the names need to match and be in the correct order
     data = data.loc[:,['EIN','NAME','AddressLine1Txt','CityNm','StateAbbreviationCd','ZIPCd']]
@@ -189,7 +191,7 @@ def update_donation_csv(file_path, suffix, drop_duplicates=True):
         data[col] = data[col].astype('int64')
     data.index.name = 'id'
 
-    data.to_csv('Donations' + suffix + '.csv', index=True)
+    data.to_csv('Donations' + suffix + '.csv', index=True, index_label='id')
     return None
 
 

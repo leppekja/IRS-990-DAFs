@@ -117,8 +117,8 @@ def get_form_headers(tree):
     data['NAME'] = ' '.join(name_fields.values())
     
     data['TAXYEAR'] = read_xmls.search_tree(tree, 'TaxYr')['TaxYr']
-    data['TAXYRSTART'] = read_xmls.search_tree(tree, 'TaxPeriodEndDt')['TaxPeriodEndDt']
-    data['TAXYREND'] = read_xmls.search_tree(tree, 'TaxPeriodBeginDt')['TaxPeriodBeginDt']
+    data['TAXYRSTART'] = read_xmls.search_tree(tree, 'TaxPeriodBeginDt')['TaxPeriodBeginDt']
+    data['TAXYREND'] = read_xmls.search_tree(tree, 'TaxPeriodEndDt')['TaxPeriodEndDt']
 
     for child in tree.find(".//Filer/USAddress"):
         data[child.tag] = child.text
@@ -154,7 +154,7 @@ def get_schedule_i(root):
             org = {}
             if (child.tag == 'RecipientTable') or (child.tag == 'GrantsOtherAsstToIndivInUSGrp'):
                 for item in child:
-                #Get only grantee information, not Supplemental Information
+                # Get only grantee information, not Supplemental Information
                     if item:
                         for subitem in item:
                             org[subitem.tag] = subitem.text
@@ -204,6 +204,8 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein, daf_sponsor_taxyear):
     '''
     Adds the sponsoring organization EIN to each grant and converts
     grant amounts to floats. 
+    Joins Address lines together and checks for any names c/o names in the address
+    that should be redacted
     Note that daf_dataframe may, for some 990s, be None. 
     '''
     # details for sponsoring orgs included in different dataframe
@@ -221,6 +223,15 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein, daf_sponsor_taxyear):
         # add name of DAF sponsoring organization into grantee data
         daf_dataframe['Sponsor'] = daf_sponsor_ein
         daf_dataframe['TAXYEAR'] = daf_sponsor_taxyear
+
+        # check for any C/O names in the address field
+        in_care_of = re.compile("c/o")
+
+        daf_dataframe['AddressLine1Txt'].str.contains(in_care_of, flags=re.IGNORECASE)
+
+        # join address lines together
+        try:
+            daf_dataframe['Address'] = daf_dataframe['AddressLine1Txt'] + daf_dataframe['AddressLine2Txt']
         try:
             daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
         except AttributeError:

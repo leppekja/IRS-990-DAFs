@@ -2,15 +2,16 @@ import psycopg2
 import argparse
 import pandas as pd
 
-def csv_load(file_path, table_name, host, port, user_name, db_name, password):
+def csv_load(sponsors_file, grantees_file,
+            taxperiod_file, worth_file,
+            donations_file, host, port, 
+            user_name, db_name, password):
     '''
     Load data from csv file into database tables for testing.
     ***SPONSORS MUST BE LOADED IN BEFORE GRANTEES***
     Input:
-    file: csv file
-    table_name: which table to input data into. Either 'sponsors' or 'grantees'.
-    if sponsors, will update taxperiod table as well
-    if grantees, will update donation table as well
+    files: csv files for sponsor, grantee, taxperiod, 
+            donation, and worth tables
     host: database host
     port: port connection is listening on
     db_name: database name
@@ -22,51 +23,71 @@ def csv_load(file_path, table_name, host, port, user_name, db_name, password):
                             host=host, port=port)
     cur = conn.cursor()
 
-    with open(file_path) as f:
-        if table_name.lower() == 'sponsors':
-            copy = """COPY dafs_sponsor
-                  FROM STDIN
-                  WITH (FORMAT csv, HEADER TRUE);"""
-        elif table_name.lower() == 'grantees':
-            copy = """COPY dafs_grantee
-                  FROM STDIN
-                  WITH (FORMAT csv, HEADER TRUE);""" 
-        elif table_name.lower() == 'donations':
-             copy = """COPY dafs_donation
-                  FROM STDIN
-                  WITH (FORMAT csv, HEADER TRUE);""" 
-        else:
-            print("Check the table name!")
-                                        
-        try:
-            cur.copy_expert(copy, f)
-            conn.commit()
-        except Exception as e:
-            print(e)
-            conn.rollback()
+    upload_files = [('sponsors', sponsors_file),
+                    ('taxperiod', taxperiod_file),
+                    ('grantees', grantees_file),
+                    ('worth', worth_file),
+                    ('donations', donations_file)]
+
+    copy_statements = {'sponsors':
+            """COPY dafs_sponsor
+            FROM STDIN
+            WITH (FORMAT csv, HEADER TRUE);""",
+            'taxperiod':
+            """COPY dafs_taxperiod
+            FROM STDIN
+            WITH (FORMAT csv, HEADER TRUE);""",     
+            'grantees':       
+            """COPY dafs_grantee
+            FROM STDIN
+            WITH (FORMAT csv, HEADER TRUE);""",
+            'worth':
+            """COPY dafs_worth
+            FROM STDIN
+            WITH (FORMAT csv, HEADER TRUE);""",
+            'donations':
+            """COPY dafs_donation
+            FROM STDIN
+            WITH (FORMAT csv, HEADER TRUE);""" }
     
+    for item in upload_files:
+        name, table = item
+        with open(table) as f:
+            try:
+                cur.copy_expert(copy_statements[name], f)
+                conn.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+        
     cur.close()
     conn.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description='Read a IRS 990 Form and download data \
-                        associated with a donor-advised fund')
-    parser.add_argument('-file_path',type=str,
-                    help='link or file name to XML format 990 form')
-    parser.add_argument('-table_name',type=str,
-                    help='link or file name to XML format 990 form')
+            description='bulk upload data files to database')
+    parser.add_argument('-sponsor',type=str,
+                    help='sponsor table csv')
+    parser.add_argument('-grantee',type=str,
+                    help='grantee table csv')
+    parser.add_argument('-tax',type=str,
+                    help='tax table csv')
+    parser.add_argument('-worth',type=str,
+                    help='worth table csv')
+    parser.add_argument('-donation',type=str,
+                    help='donation table csv')
     parser.add_argument('-host', type=str,
-                    help="whether to download the form from online (True, default) \
-                        or access it locally")
+                    help="db host")
     parser.add_argument('-port', type=int,
-                    help="whether to print progress")    
+                    help="db port")    
     parser.add_argument('-username',type=str,
-                    help='link or file name to XML format 990 form')
+                    help='db username')
     parser.add_argument('-dbname',type=str,
-                    help='link or file name to XML format 990 form')
+                    help='db name')
     parser.add_argument('-password',type=str,
-                    help='link or file name to XML format 990 form')                                       
+                    help='db password')                                       
     args = parser.parse_args()
-    csv_load(file_path=args.file_path, table_name=args.table_name, host=args.host, 
+    csv_load(sponsors_file=args.sponsor, grantees_file=args.grantee,
+            taxperiod_file=args.tax, worth_file=args.worth,
+            donations_file=args.donation, host=args.host, 
             port=args.port, user_name=args.username, db_name=args.dbname, password=args.password)
