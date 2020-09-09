@@ -4,6 +4,7 @@ import read_xmls
 import pandas as pd
 import numpy as np  
 import argparse
+import re
 
 '''
 FIELDS OBTAINED
@@ -225,13 +226,16 @@ def clean_daf_grantee_data(daf_dataframe, daf_sponsor_ein, daf_sponsor_taxyear):
         daf_dataframe['TAXYEAR'] = daf_sponsor_taxyear
 
         # check for any C/O names in the address field
-        in_care_of = re.compile("c/o")
-
-        daf_dataframe['AddressLine1Txt'].str.contains(in_care_of, flags=re.IGNORECASE)
-
+        in_care_of = re.compile("c/o", flags=re.IGNORECASE)
+        # And get rid of them (don't want to share individual names)
+        daf_dataframe['AddressLine1Txt'].replace(in_care_of, '', inplace=True, regex=True)
+        
         # join address lines together
         try:
             daf_dataframe['Address'] = daf_dataframe['AddressLine1Txt'] + daf_dataframe['AddressLine2Txt']
+        except Error as e:
+            print(e)
+            pass
         try:
             daf_dataframe['CashGrantAmt'] = daf_dataframe.CashGrantAmt.astype(float)
         except AttributeError:

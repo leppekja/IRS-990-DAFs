@@ -37,7 +37,7 @@ def get_data(file_or_folder, start, end, verbose=False):
                         else:
                             pass
                     except Exception as e:
-                        print(e)
+                        #print(e)
                         failures.append(daf_file)
                 else:
                     pass
