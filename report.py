@@ -3,6 +3,37 @@
 Code for creating Sponsoring Organization and Grantee reports for DonorAdvisedFunds.io
 
 '''
+from fpdf2 import FPDF
+
+def aggregate_report(sponsors, grantees, year):
+    sponsors = pd.read_csv(sponsors)
+    grantees = pd.read_csv(grantees)
+
+    sponsors = sponsors.loc[sponsors['TAXYEAR'] == year]
+    grantees = grantees.loc[grantees['TAXYEAR'] == year]
+
+    text = 'In {year}, {total_daf_accounts} donor-advised funds  '
+
+def create_pdf(data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('Arial','B',16)
+    pdf.cell(40, 10, 'Hello World!')
+    pdf.output('test.pdf','F')
+
+class Report(self, sponsors, grantees, donations,
+            taxperiod, worth, orgs=None, **kwargs):
+    '''
+    First 5 arguments reflect corresponding .csv
+    sheets.
+    <orgs> takes a list of EIN numbers. If orgs is None,
+    then all organizations are used. 
+    **kwargs may take the following additional arguments:
+    year: list of years to develop reports for. 
+    multi-year: returns a single multi-year report identifying
+    time trends. 
+    '''
+    
 
 def sponsor_report():
     '''

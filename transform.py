@@ -112,7 +112,7 @@ def update_sponsor_csv(file_path, suffix, drop_duplicates=True):
                     'TAXYEAR']]
 
     worth_data.columns = worth_col_names
-    worth_data.to_csv('Worth' + suffix + '.csv', index=True, , index_label='id')
+    worth_data.to_csv('Worth' + suffix + '.csv', index=True, index_label='id')
 
     # Copy from for bulk upload; the names need to match and be in the correct order
     data = data.loc[:,['EIN','NAME','AddressLine1Txt','CityNm','StateAbbreviationCd','ZIPCd']]
@@ -180,7 +180,7 @@ def update_donation_csv(file_path, suffix, drop_duplicates=True):
     data = data.loc[:, ['CashGrantAmt', 'PurposeOfGrantTxt','GrantTypeTxt','RecipientEIN', 'Sponsor','TAXYEAR']]
     data.columns = donation_col_names
     data['purpose_of_grant'] = data['purpose_of_grant'].str[:100]
-    data['grant_type'] = data['grant_type'].str[:50]
+    data['grant_type'] = data['grant_type'].astype(str).str[:50]
 
     data.dropna(subset=['grantee_ein_id'], inplace=True)
     # Need to change this - grant type is frequently null

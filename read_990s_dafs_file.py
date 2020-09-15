@@ -3,6 +3,7 @@ import read_990 as rd
 import pandas as pd 
 import argparse
 import os
+import time
 
 
 def get_data(file_or_folder, start, end, verbose=False):
@@ -23,6 +24,7 @@ def get_data(file_or_folder, start, end, verbose=False):
     for file_location in file_or_folder:
         if os.path.isdir(file_location):
             file_count = 0
+            start = time.time()
             for daf_file in os.listdir(file_location):
                 tree = rd.read_form(document= file_location + '/' + daf_file, download=False)
                 if rd.get_form_type(tree) == '990':
@@ -47,7 +49,9 @@ def get_data(file_or_folder, start, end, verbose=False):
                 file_count += 1 
                 
                 if file_count % 100000 == 0:
-                    print(file_count, 'files counted.')
+
+                    print(file_count, 'files counted in', (time.time() - start) / 60, 'minutes')
+
 
 
         else:
