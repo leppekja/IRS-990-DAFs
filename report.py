@@ -46,12 +46,12 @@ def sponsor_report():
             REPORTED YEARLY FOR EACH YEAR THAT DATA IS AVAILABLE
             Tax Year
 
-            Total amount contributed across all DAF accounts at an organization
-            Total amount granted across all DAF accounts at an organization
-            Total worth at End of Year across all DAF accounts at an organization
-            Number of DAF accounts held at an organization
-            Whether the organization made a legal disclosure to all contributers
-            Whether the organization informed donors of grant purpose
+            # Total amount contributed across all DAF accounts at an organization
+            # Total amount granted across all DAF accounts at an organization
+            # Total worth at End of Year across all DAF accounts at an organization
+            # Number of DAF accounts held at an organization
+            # Whether the organization made a legal disclosure to all contributers
+            # Whether the organization informed donors of grant purpose
 
             Number of similar accounts held  at an organization
             Total amount contributed across all similar accounts at an organization
@@ -60,9 +60,9 @@ def sponsor_report():
 
         ### SUMMARY STATISTICS ###
             REPORTED YEARLY FOR EACH YEAR THAT DATA IS AVAILABLE
-            Average amount held in each DAF account
-                (Total EOY DAF worth / Number of DAF held)
-                # Calculate mode and median as well
+            # Average amount held in each DAF account
+            #     (Total EOY DAF worth / Number of DAF held)
+
 
             NOT YEARLY; CUMULATIVE ACROSS ALL YEARS DATA IS AVAILABLE
             Cumulative amount contributed across all accounts
