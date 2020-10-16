@@ -3,7 +3,7 @@ Code for analyzing Donor Advised Funds
 
 Thanks for visiting! Our data is currently being reviewed to ensure the highest level of accuracy possible. We expect functionality to be enabled winter 2020.
 
-![Landing Page photo](./UI Designs/home_page.png)
+![Landing Page photo](/UI Designs/home_page.png)
 
 ### Table of Contents
 
@@ -32,6 +32,8 @@ Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the
 - Identify which nonprofits obtain the most grants from donor-advised funds. 
 - Identify top donor-advised funds
 - Examine various measures of grant spread, i.e., how diverse are the grantees across organization size, geographic area, mission or cause, etc.
+
+![Report page photo](/UI Designs/report.png)
 
 ### Step 1
 ##### COMPLETE
