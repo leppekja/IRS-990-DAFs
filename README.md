@@ -31,6 +31,9 @@ Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the
 
 - Identify which nonprofits obtain the most grants from donor-advised funds. 
 - Identify top donor-advised funds
+
+![map photo](/UI Designs/map.png)
+
 - Examine various measures of grant spread, i.e., how diverse are the grantees across organization size, geographic area, mission or cause, etc.
 
 ![Report page photo](/UI Designs/report.png)
