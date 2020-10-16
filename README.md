@@ -1,6 +1,8 @@
 # 990-DAFs
 Code for analyzing Donor Advised Funds 
 
+Thanks for visiting! Our data is currently being reviewed to ensure the highest level of accuracy possible. We expect functionality to be enabled winter 2020.
+
 ### Table of Contents
 
 - [Overview](#overview)
@@ -65,10 +67,10 @@ fields.csv contains the fields and variable descriptions for those collected wit
 ### Step 3b
 ##### COMPLETE
 
-We need to read the data into a database accessible online for the web application. We're using a PostgreSQL database on AWS RDS. create.sql is a psql script to create the schema; otherwise, the schema is also implemented through Django's Model classes (will be uploaded later). A ERD diagram is in daf_erd_diagram_sketch.png and will be updated soon. 
+We need to read the data into a database accessible online for the web application. We're using a PostgreSQL database on AWS RDS. create.sql is an outdated psql script to create the schema; the primary schema is implemented through Django's Model classes (will be uploaded later). A ERD diagram is in daf_erd_diagram_sketch.png and will be updated soon. 
 
 ### Step 4
-##### INCOMPLETE
+##### COMPLETE
 
 We need to geocode the addresses of both the sponsoring organizations and the grantees. 
 
@@ -83,6 +85,13 @@ Set up web search application to easily search an organization and get back eith
 - visualization of where funds have been sent/recieved. 
 
 For this application, we're using a Django framework hosted on AWS Lightsail. 
+
+Deployment instructions:
+- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Deployment
+- https://aws.amazon.com/getting-started/hands-on/deploy-python-application/
+- https://stackoverflow.com/questions/63680664/no-apps-folder-on-django-lightsail/63684039#63684039
+- https://docs.bitnami.com/aws/infrastructure/django/get-started/start-django-project/
+- https://docs.bitnami.com/aws/infrastructure/django/get-started/deploy-django-project/
 
 ### Step 6
 ##### INCOMPLETE
