@@ -25,7 +25,7 @@ Thanks for visiting! Our data is currently being reviewed to ensure the highest 
 
 ## Overview
 
-Donor Advised Funds (DAF) are some of the largest nonprofit organizations in the world, distributing billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
+Donor Advised Funds (DAF) distribute billions of dollars to NGOs each year. This project attempts to map and analyze the flow of these funds from DAFs to NGOs. DAFs are required to report any cumulative grants greater than $5,000 in the IRS 990 Form Schedule I. This project also attempts to demonstrate the validity of open source data projects for the nonprofit sector.
 
 ### Example Use Cases
 
