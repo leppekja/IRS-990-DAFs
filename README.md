@@ -150,8 +150,8 @@ See [here](https://www.irs.gov/instructions/i990sd), in the **Exceptions** secti
 
 ### Next Steps
 
-- Geocode grantee and sponsoring organizations addresses
-- Develop interactive online map 
+- Geocode grantee and sponsoring organizations addresses - Done
+- Develop interactive online map - Done
 - Enable Rest API access
 - Create automatic monthly updating from IRS updates; what is the best ETL pipeline?
 - Automatic report generation for organizations and sector-wide
