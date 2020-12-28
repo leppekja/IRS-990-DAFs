@@ -69,6 +69,19 @@ Otherwise, you can download the index for each year and manually select individu
 
 Use code from Step 1 to read in all organizations collected in step 2. Output will be a data frame with details on all sponsoring organizations (those with a DAF) and a dataframe with all nonprofit organizations that received gifts > $5,000.
 
+Read and parse the downloaded file(s) of 990s. 
+
+    python read_990s_dafs_file.py -file "file_name_here" "file_2_name_here"
+
+A few more data cleaning steps prior to loading into the database:
+
+    python transform.py -sponsor "Sponsors.csv" -grantee "Grantees.csv" -suffix "_export"
+
+
+Then bulk upload into the database:
+
+    python bulk_upload.py --
+
 fields.csv contains the fields and variable descriptions for those collected within the scope of this analysis. This is a work in progress and may be updated to account for differing versions. 
 
 ### Step 3b
@@ -119,6 +132,7 @@ Note that a private foundation may control a donor-advised fund, but these organ
 
 ##### ETL
 - Different form versions break the code
+- Implement multiprocessing for file parsing and initial data cleaning to speed things up
 ##### Data Questions
 - A number of organizations marked Yes as maintaining a DAF or similar fund without completing summary information in Schedule D part 1. See [Winona State University Foundation June 2018 Filing](https://s3.amazonaws.com/irs-form-990/201800349349300310_public.xml). Unclear whether this is an oversight, or there is some reason this is fine. 
 - Improper EIN recorded in 2018 data (Recipient EIN listed as 883682); likely others.

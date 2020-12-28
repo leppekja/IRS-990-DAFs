@@ -16,6 +16,7 @@ def get_data(file_or_folder, start, end, verbose=False):
     '''
     sponsors = pd.DataFrame()
     grants_made = pd.DataFrame()
+
     daf_object_ids = []
     failures  = []
 
@@ -36,6 +37,7 @@ def get_data(file_or_folder, start, end, verbose=False):
                             #append dataframes with org info and grantees (I)
                             sponsors = sponsors.append(sponsor_details)
                             grants_made = grants_made.append(grantees)
+
                         else:
                             pass
                     except Exception as e:
@@ -106,7 +108,8 @@ def get_daf_data(tree, verbose):
         #get schedule D
         daf_details = rd.get_schedule_d(tree)
         #combine headers and schedule D
-        sponsor_details = pd.DataFrame({**sponsor, **daf_details}, index=[0])
+        #sponsor_details = pd.DataFrame({**sponsor, **daf_details}, index=[0])
+
         #get schedule I
         grantees = rd.get_schedule_i(tree)
         #clean schedule I for database loading
