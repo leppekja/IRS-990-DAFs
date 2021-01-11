@@ -1,7 +1,7 @@
 # 990-DAFs
 Code for analyzing Donor Advised Funds 
 
-Thanks for visiting! Our data is currently being reviewed to ensure the highest level of accuracy possible. We expect functionality to be enabled winter 2020.
+Thanks for visiting! Our data is currently being reviewed to ensure the highest level of accuracy possible. We expect the website to be operational in March 2021.
 
 ![Landing Page photo](/UI Designs/home_page.png)
 
