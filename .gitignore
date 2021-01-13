@@ -134,5 +134,12 @@ dmypy.json
 # Output CSV/.XLSX files
 *.csv
 *.xlsx
+
 # Output text files
 *.txt
+
+# Make exception for sample data files
+
+!Sample_Data/
+!Sample_Grantee_Data.csv
+!Sample_Sponsors_Data.csv

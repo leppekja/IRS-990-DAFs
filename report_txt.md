@@ -7,6 +7,7 @@ Per the IRS, a donor advised fund is a fund or account:
 
 These three conditions allow individuals to make tax-deductible donations to sponsoring organizations, like banks or community foundations. Individuals then recommend which nonprofit organizations should recieve the funds, and the sponsoring organization handles the disbursement of the funds. 
 
+##### DAFs Growth
 
 
 Data is available for all years the IRS-990 has been published for the public.
