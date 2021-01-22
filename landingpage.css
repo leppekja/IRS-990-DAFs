@@ -1,0 +1,206 @@
+html {
+    font-family: 'Noto Sans JP', Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: whitesmoke;
+    padding:0;
+    padding-bottom:60px;
+  }
+
+.contrast-font {
+    font-size: 18px;
+    font-family: 'Didact Gothic', Arial, sans-serif;
+}
+
+
+  /* Navigation Bar CSS */
+
+
+.nav {
+    width: 100%;
+    background-color: #003f5c;
+    overflow: auto;
+}
+
+.nav a {
+    float: left;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.nav a:hover {
+    border-right: 1px solid whitesmoke;
+    border-left: 1px solid whitesmoke;
+}
+
+@media screen and (max-width: 500px) {
+    .nav a {
+        float: none;
+        display: block;
+    }
+
+    .nav a:hover {
+        border-top: 1px solid whitesmoke;
+        border-bottom: 1px solid whitesmoke;
+        border-right: none;
+        border-left: none;
+    }
+}
+
+/* CSS for Hero Element and Call to Action */
+
+.primary-container {
+    background-image: linear-gradient(whitesmoke, darkgray);
+}
+
+.landing {
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    display:inline-block;
+}
+
+.landing > h1 {
+    font-size:5vw;
+}
+
+input {
+    box-sizing: border-box;
+    font-size: 16px;
+    width: 70%;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 12px 20px;
+    transition-duration: .2s;
+    box-shadow: 0px 0px 8px  gray;
+}
+
+input:focus {
+    box-shadow: 0px 0px 14px black;
+  }
+
+::placeholder { 
+    color: black;
+    opacity: 1; 
+  }
+
+.submit {
+    background: none;
+    border: none;
+    transition-duration: .2s;
+    display: inline-block;
+    text-shadow: 0px 0px 8px  gray;
+}
+
+.submit:hover {
+    text-shadow: 0px 0px 14px  black;
+}
+
+
+/* CSS Flexbox */
+
+.flex-container {
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.quotes {
+    text-align: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    border: 1px solid #003f5c;
+    border-radius: 5px;
+    padding: 15px 5px 15px 5px;
+    margin: 30px 30px 10px 30px;
+    transition-duration:.5s;
+}
+
+.quotes:hover {
+    box-shadow: 0px 0px 6px  gray;
+}
+
+@media screen and (max-width: 500px) {
+    .flex-container {
+      flex-direction: column;
+    }
+  }
+
+/* CSS Grid for News Articles */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    padding: 10px;
+    background-color: darkgray;
+    min-height: 50%;
+}
+.article {
+    border-radius: 4px;
+    padding: 20px;
+    margin: 1px;
+    background: whitesmoke;
+    box-shadow: 0 4px 8px 0  rgb(82, 82, 82);
+  }
+
+.articlelink {
+    text-decoration: none;
+    color: black;
+}
+
+.article:hover {
+    box-shadow: 0 4px 8px 0 #003f5c;
+}
+
+/* CSS Multicolumns for About Description */
+
+.multicolumns {
+    background-image: linear-gradient(darkgray 20%, whitesmoke);
+    column-width: 300px;
+    column-gap: 100px;
+    padding: 50px; 
+    column-rule: 1px solid #003f5c;
+    background-color: darkgray;
+    text-align: justify;
+    
+}
+
+.multicolumns h3 {
+    /* Ensure the top of the columns is on the same line */
+    margin: 0px;
+}
+
+@media screen and (max-width: 500px) {
+    .multicolumns {
+      column-count: 1;
+    }
+  }
+
+  /* Footer and Links CSS*/
+  body > footer {
+    background: #003f5c;
+    margin: 0px;
+    height: 40px;
+    width:100%;
+    padding: 15px 0px 0px 0px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+}
+
+.social {
+    color: whitesmoke;
+    text-decoration: none;
+    text-shadow: 0px 0px 2px white;
+}
+
+.social:hover {
+    border-right: 1px solid gray;
+    border-left: 1px solid gray;
+}
