@@ -37,7 +37,7 @@ body {
     border-left: 1px solid whitesmoke;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
     .nav a {
         float: none;
         display: block;
@@ -125,7 +125,7 @@ input:focus {
     box-shadow: 0px 0px 6px  gray;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
     .flex-container {
       flex-direction: column;
     }
@@ -176,7 +176,7 @@ input:focus {
     margin: 0px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
     .multicolumns {
       column-count: 1;
     }
