@@ -3,8 +3,6 @@ Code for analyzing Donor Advised Funds
 
 Thanks for visiting! Our data is currently being reviewed to ensure the highest level of accuracy possible. We expect the website to be operational in March 2021.
 
-[View our landing page](landingpage.html)
-
 ![Landing Page photo](/UI Designs/home_page.png)
 
 ### Table of Contents
